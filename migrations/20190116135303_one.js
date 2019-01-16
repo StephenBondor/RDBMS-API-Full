@@ -19,10 +19,13 @@ exports.up = function(knex, Promise) {
 			tbl.increments(); //defaults to a column named id, autoincrements
 
 			//other feilds
-            tbl.text('name', 128);
-            
-            //other feilds
-			tbl.integer('cohort_id');
+			tbl.text('name', 128);
+
+			//other feilds
+			tbl.integer('cohort_id')
+				.unsigned()
+				.references('id')
+				.inTable('cohorts');
 
 			// time stamps
 			tbl.timestamps(true, true);
@@ -33,6 +36,8 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-    //undo changes
-	return knex.schema.dropTableIfExists('cohorts').dropTableIfExists('students');
+	//undo changes
+	return knex.schema
+		.dropTableIfExists('cohorts')
+		.dropTableIfExists('students');
 };

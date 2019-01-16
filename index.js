@@ -16,7 +16,6 @@ server.get('/', (req, res) => {
 	res.send('api working');
 });
 
-
 // add whatever to whatever table
 server.post('/api/:table', (req, res) => {
 	const body = req.body;
@@ -50,6 +49,17 @@ server.get('/api/:table/:id', (req, res) => {
 		.catch(err => res.status(500).json(err));
 });
 
+//list whatever by ID with an added student tag
+server.get('/api/:table/:id/students', (req, res) => {
+	const id = req.params.id;
+	db('students')
+		.where({'cohort_id' : id})
+		.then(thing => {
+			res.status(200).json(thing);
+		})
+		.catch(err => res.status(500).json(err));
+});
+
 // delete whatever
 server.delete('/api/:table/:id', (req, res) => {
 	const id = req.params.id;
@@ -73,8 +83,6 @@ server.put('/api/:table/:id', (req, res) => {
 		})
 		.catch(err => res.status(500).json(err));
 });
-
-
 
 const port = 3300;
 server.listen(port, function() {
