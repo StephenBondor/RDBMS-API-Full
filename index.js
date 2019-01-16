@@ -41,19 +41,32 @@ server.get('/api/:table', (req, res) => {
 //list whatever by ID
 server.get('/api/:table/:id', (req, res) => {
 	const {id} = req.params;
-	db(req.params.table)
-		.where({id})
-		.then(thing => {
-			res.status(200).json(thing);
-		})
-		.catch(err => res.status(500).json(err));
+	const {table} = req.params;
+	console.log(table, id);
+	if (table === 'students') {
+		db(table)
+			.join('cohorts', 'students.cohort_id', '=', 'cohorts.id')
+			.select('students.id', 'students.name', {cohort :'cohorts.name'})
+			.where({'students.id' : id})
+			.then(thing => {
+				res.status(200).json(thing);
+			})
+			.catch(err => res.status(500).json(err));
+	} else {
+		db(table)
+			.where({id})
+			.then(thing => {
+				res.status(200).json(thing);
+			})
+			.catch(err => res.status(500).json(err));
+	}
 });
 
 //list whatever by ID with an added student tag
 server.get('/api/:table/:id/students', (req, res) => {
 	const id = req.params.id;
 	db('students')
-		.where({'cohort_id' : id})
+		.where({cohort_id: id})
 		.then(thing => {
 			res.status(200).json(thing);
 		})
