@@ -38,6 +38,17 @@ server.get('/api/:table', (req, res) => {
 		.catch(err => res.status(500).json(err));
 });
 
+//list whatever by ID with an added student tag
+server.get('/api/:table/:id/students', (req, res) => {
+	const id = req.params.id;
+	db('students')
+		.where({cohort_id: id})
+		.then(thing => {
+			res.status(200).json(thing);
+		})
+		.catch(err => res.status(500).json(err));
+});
+
 //list whatever by ID
 server.get('/api/:table/:id', (req, res) => {
 	const {id} = req.params;
@@ -60,17 +71,6 @@ server.get('/api/:table/:id', (req, res) => {
 			})
 			.catch(err => res.status(500).json(err));
 	}
-});
-
-//list whatever by ID with an added student tag
-server.get('/api/:table/:id/students', (req, res) => {
-	const id = req.params.id;
-	db('students')
-		.where({cohort_id: id})
-		.then(thing => {
-			res.status(200).json(thing);
-		})
-		.catch(err => res.status(500).json(err));
 });
 
 // delete whatever
